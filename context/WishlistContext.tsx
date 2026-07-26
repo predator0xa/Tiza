@@ -8,10 +8,12 @@ import {
   useState,
 } from "react";
 
-type WishlistItem = {
+export type WishlistItem = {
   id: string;
   name: string;
   image: string;
+  hoverImage: string;
+  badge: string;
   price: number;
 };
 
@@ -32,7 +34,9 @@ export function WishlistProvider({
 
   useEffect(() => {
     const saved = localStorage.getItem("tiza-wishlist");
-    if (saved) setWishlist(JSON.parse(saved));
+    if (saved) {
+      setWishlist(JSON.parse(saved));
+    }
   }, []);
 
   useEffect(() => {

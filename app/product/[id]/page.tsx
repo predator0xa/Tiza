@@ -54,11 +54,13 @@ export default async function ProductPage({
           </p>
 
           <WishlistButton
-            id={product.id}
-            name={product.name}
-            image={product.image}
-            price={product.price}
-          />
+  id={product.id}
+  name={product.name}
+  image={product.image}
+  hoverImage={product.hoverImage}
+  badge={product.badge}
+  price={product.price}
+/>
 
           <div className="mt-6">
             <ProductActions
