@@ -5,6 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, Search } from "lucide-react";
 
+import {
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+
 import { useWishlist } from "@/context/WishlistContext";
 import CartBadge from "@/components/common/CartBadge";
 import SearchOverlay from "@/components/search/SearchOverlay";
@@ -12,6 +19,7 @@ import SearchOverlay from "@/components/search/SearchOverlay";
 export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const { wishlist } = useWishlist();
+  const { isSignedIn } = useUser();
 
   return (
     <>
@@ -89,8 +97,30 @@ export default function Navbar() {
             {/* Cart */}
             <CartBadge />
 
-            {/* Temporary Placeholder */}
-            <div className="h-10 w-20"></div>
+            {/* Authentication */}
+            {isSignedIn ? (
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "h-9 w-9",
+                  },
+                }}
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <SignInButton mode="modal">
+                  <button className="rounded-full border border-neutral-300 px-4 py-2 text-sm transition hover:bg-neutral-100">
+                    Sign In
+                  </button>
+                </SignInButton>
+
+                <SignUpButton mode="modal">
+                  <button className="rounded-full bg-black px-4 py-2 text-sm text-white transition hover:bg-neutral-800">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </div>
+            )}
           </div>
         </div>
       </header>
