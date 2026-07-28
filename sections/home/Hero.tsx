@@ -33,7 +33,7 @@ export default function Hero() {
         </h1>
 
         <h2 className="mt-6 text-2xl font-light sm:text-3xl md:text-4xl">
-          But Mama I'm in Love with a Criminal...
+          Don't just fit into the story.
         </h2>
 
         <div className="mt-4 flex flex-col items-center">
