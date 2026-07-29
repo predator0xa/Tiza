@@ -11,22 +11,22 @@ const categories = [
     className: "lg:col-span-2 lg:row-span-2",
   },
   {
-    title: "NEW ARRIVALS",
-    subtitle: "Latest Drop",
-    image: "/images/collections/new.jpg",
-    className: "lg:row-span-2",
-  },
-  {
     title: "WOMEN",
     subtitle: "Luxury Collection",
     image: "/images/collections/women.jpg",
-    className: "",
+    className: "lg:col-span-1 lg:row-span-1",
   },
   {
-    title: "ACCESSORIES",
-    subtitle: "Complete Your Look",
+    title: "KIDS",
+    subtitle: "Mini Classics",
+    image: "/images/collections/new.jpg",
+    className: "lg:col-span-1 lg:row-span-1",
+  },
+  {
+    title: "OTHERS",
+    subtitle: "Accessories & More",
     image: "/images/collections/accessories.jpg",
-    className: "",
+    className: "lg:col-span-1 lg:row-span-2",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function EditorialGrid() {
         </h2>
       </div>
 
-      <div className="grid auto-rows-[230px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[270px]">
+      <div className="grid auto-rows-[220px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:auto-rows-[280px]">
         {categories.map((item) => (
           <motion.div
             key={item.title}
