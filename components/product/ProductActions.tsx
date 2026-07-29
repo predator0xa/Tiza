@@ -54,15 +54,15 @@ export default function ProductActions({
           Size
         </p>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {["S", "M", "L", "XL"].map((s) => (
             <button
               key={s}
               onClick={() => setSize(s)}
               className={`h-12 w-12 rounded-full border transition ${
                 size === s
-                  ? "bg-black text-white"
-                  : "hover:bg-black hover:text-white"
+                  ? "border-[#081A35] bg-[#081A35] text-white"
+                  : "border-[#081A35]/20 hover:border-[#081A35] hover:bg-[#081A35] hover:text-white"
               }`}
             >
               {s}
@@ -71,10 +71,10 @@ export default function ProductActions({
         </div>
       </div>
 
-      <div className="mt-10 flex gap-4">
+      <div className="sticky bottom-3 z-10 mt-10 flex gap-4 rounded-2xl bg-[#f8f7f4]/90 p-2 backdrop-blur sm:static sm:bg-transparent sm:p-0">
         <button
           onClick={handleAddToCart}
-          className="flex-1 rounded-full bg-black py-4 text-white transition hover:bg-neutral-800"
+          className="min-h-14 flex-1 rounded-full bg-[#081A35] py-4 text-sm font-medium tracking-[.08em] text-white transition hover:bg-[#102849]"
         >
           {added ? "Added ✓" : "Add to Cart"}
         </button>

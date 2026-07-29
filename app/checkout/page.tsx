@@ -46,63 +46,63 @@ export default function CheckoutPage() {
     <>
       <Navbar />
 
-      <main className="mx-auto max-w-7xl px-6 py-28">
-        <h1 className="mb-10 text-5xl font-light">
+      <main className="mx-auto max-w-7xl px-5 pt-24 pb-16 sm:px-6 sm:pt-28 sm:pb-24">
+        <h1 className="mb-8 font-serif text-4xl font-light sm:mb-10 sm:text-5xl">
           Checkout
         </h1>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
           <section className="space-y-5">
             <h2 className="text-xl font-medium">
               Shipping Information
             </h2>
 
-            <input
+            <input aria-label="Full name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Full Name"
-              className="w-full rounded-xl border p-4 outline-none focus:ring-2 focus:ring-black"
+              className="min-h-14 w-full rounded-xl border border-[#081A35]/15 p-4 outline-none focus:ring-2 focus:ring-[#D8B56A]"
             />
 
-            <input
+            <input aria-label="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Address"
-              className="w-full rounded-xl border p-4 outline-none focus:ring-2 focus:ring-black"
+              className="min-h-14 w-full rounded-xl border border-[#081A35]/15 p-4 outline-none focus:ring-2 focus:ring-[#D8B56A]"
             />
 
-            <input
+            <input aria-label="Phone number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone Number"
-              className="w-full rounded-xl border p-4 outline-none focus:ring-2 focus:ring-black"
+              className="min-h-14 w-full rounded-xl border border-[#081A35]/15 p-4 outline-none focus:ring-2 focus:ring-[#D8B56A]"
             />
 
-            <input
+            <input aria-label="Street address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Street Address"
-              className="w-full rounded-xl border p-4 outline-none focus:ring-2 focus:ring-black"
+              className="min-h-14 w-full rounded-xl border border-[#081A35]/15 p-4 outline-none focus:ring-2 focus:ring-[#D8B56A]"
             />
 
             <div className="grid grid-cols-2 gap-4">
-              <input
+              <input aria-label="City"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="City"
-                className="rounded-xl border p-4 outline-none focus:ring-2 focus:ring-black"
+                className="min-h-14 min-w-0 rounded-xl border border-[#081A35]/15 p-4 outline-none focus:ring-2 focus:ring-[#D8B56A]"
               />
 
-              <input
+              <input aria-label="ZIP code"
                 value={zip}
                 onChange={(e) => setZip(e.target.value)}
                 placeholder="ZIP Code"
-                className="rounded-xl border p-4 outline-none focus:ring-2 focus:ring-black"
+                className="min-h-14 min-w-0 rounded-xl border border-[#081A35]/15 p-4 outline-none focus:ring-2 focus:ring-[#D8B56A]"
               />
             </div>
           </section>
 
-          <section className="rounded-3xl border p-8 shadow-sm">
+          <section className="rounded-[2rem] border border-[#081A35]/10 bg-white p-5 shadow-sm sm:p-8">
             <h2 className="mb-6 text-xl font-medium">
               Order Summary
             </h2>
@@ -183,7 +183,7 @@ export default function CheckoutPage() {
 
                   <button
                     onClick={placeOrder}
-                    className="mt-8 w-full rounded-full bg-black py-4 text-white transition hover:opacity-90"
+                    className="mt-8 min-h-14 w-full rounded-full bg-[#081A35] py-4 text-sm font-medium tracking-[.08em] text-white transition hover:bg-[#102849]"
                   >
                     Place Order
                   </button>

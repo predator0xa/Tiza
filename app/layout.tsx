@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { ClerkProvider } from "@clerk/nextjs";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,17 +27,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-        <html lang="en">
+    <html lang="en">
       <body className={`${inter.className} ${cormorant.variable}`}>
-        <CartProvider>
+        <ClerkProvider><CartProvider>
           <WishlistProvider>
             {children}
+            <Footer />
           </WishlistProvider>
-        </CartProvider>
+        </CartProvider></ClerkProvider>
       </body>
     </html>
-    </ClerkProvider>
-    
   );
 }

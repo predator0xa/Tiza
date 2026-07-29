@@ -1,0 +1,7 @@
+import { type RefObject } from "react";
+import { Search, X } from "lucide-react";
+
+type Props = { inputRef: RefObject<HTMLInputElement | null>; query: string; onChange: (value: string) => void; };
+export default function SearchInput({ inputRef, query, onChange }: Props) {
+  return <div className="group relative rounded-2xl bg-gradient-to-r from-[#D8B56A]/65 via-[#E6C57A] to-[#D8B56A]/65 p-px shadow-[0_0_26px_rgba(216,181,106,.12)] transition-shadow focus-within:shadow-[0_0_34px_rgba(230,197,122,.3)]"><div className="flex items-center rounded-[15px] bg-[#0A1D3B]/95 px-4 py-1"><Search className="mr-3 shrink-0 text-[#E6C57A]" size={21} aria-hidden="true" /><input ref={inputRef} value={query} onChange={(event) => onChange(event.target.value)} placeholder="Search the collection..." className="h-14 min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/45 outline-none sm:text-lg" aria-label="Search TIZA catalogue" autoComplete="off" />{query && <button type="button" onClick={() => onChange("")} className="flex h-10 w-10 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-[#E6C57A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E6C57A]" aria-label="Clear search"><X size={17} /></button>}<kbd className="hidden rounded border border-white/15 px-1.5 py-0.5 text-[10px] text-white/45 sm:block">ESC</kbd></div></div>;
+}

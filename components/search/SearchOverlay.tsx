@@ -1,80 +1,30 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { type KeyboardEvent as ReactKeyboardEvent, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Search, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Clock3, Sparkles, TrendingUp, X } from "lucide-react";
 import { products } from "@/lib/products";
+import SearchInput from "./SearchInput";
+import SearchResults, { SearchSkeleton } from "./SearchResults";
+import { featuredCategories, MAX_RECENT_SEARCHES, normalize, quickLinks, RECENT_SEARCHES_KEY, searchProducts } from "./search-utils";
 
-type Props = {
-  open: boolean;
-  onClose: () => void;
-};
+type Props = { open: boolean; onClose: () => void; };
+
+function Discovery({ recents, onQuery, onClear, onClose }: { recents: string[]; onQuery: (query: string) => void; onClear: () => void; onClose: () => void; }) {
+  return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid gap-7 lg:grid-cols-[1.1fr_.9fr]"><div className="space-y-7">{recents.length > 0 && <section><div className="mb-3 flex items-center justify-between"><h3 className="text-[10px] font-semibold tracking-[.2em] text-[#D8B56A] uppercase">Recent searches</h3><button type="button" onClick={onClear} className="text-xs text-white/50 transition hover:text-[#E6C57A]">Clear history</button></div><div className="flex flex-wrap gap-2">{recents.map((item) => <button key={item} type="button" onClick={() => onQuery(item)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 text-sm text-white/75 transition hover:border-[#D8B56A]/45 hover:bg-[#D8B56A]/10"><Clock3 size={14} className="text-[#D8B56A]" />{item}</button>)}</div></section>}<section><h3 className="mb-3 text-[10px] font-semibold tracking-[.2em] text-[#D8B56A] uppercase">Trending now</h3><div className="grid grid-cols-2 gap-2">{products.slice(0, 2).map((product) => <Link key={product.id} href={`/product/${product.id}`} onClick={onClose} className="group relative min-h-32 overflow-hidden rounded-2xl bg-[#102849] p-4"><span className="relative z-10 text-xs text-[#E6C57A]">{product.badge}</span><p className="absolute inset-x-4 bottom-4 text-sm font-medium text-white transition group-hover:translate-y-[-2px]">{product.name}</p></Link>)}</div></section></div><div className="space-y-7"><section><h3 className="mb-3 text-[10px] font-semibold tracking-[.2em] text-[#D8B56A] uppercase">Popular collections</h3><div className="grid gap-2">{featuredCategories.map((item) => <Link key={item.href} href={item.href} onClick={onClose} className="group flex min-h-12 items-center justify-between rounded-xl border border-white/8 bg-white/[.035] px-4 text-sm text-white/75 transition hover:border-[#D8B56A]/35 hover:bg-[#D8B56A]/10 hover:text-white"><span>{item.label}</span><ArrowRight size={16} className="text-[#D8B56A] transition-transform group-hover:translate-x-1" /></Link>)}</div></section><section><h3 className="mb-3 text-[10px] font-semibold tracking-[.2em] text-[#D8B56A] uppercase">Explore TIZA</h3>{quickLinks.map((item) => <Link key={item.href} href={item.href} onClick={onClose} className="flex min-h-9 items-center gap-2 text-sm text-white/55 transition hover:text-[#E6C57A]"><Sparkles size={13} className="text-[#D8B56A]" />{item.label}</Link>)}</section></div></motion.div>;
+}
 
 export default function SearchOverlay({ open, onClose }: Props) {
-  const [query, setQuery] = useState("");
-
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
-
-    return products.filter((product) =>
-      product.name.toLowerCase().includes(query.toLowerCase())
-    );
-  }, [query]);
-
-  if (!open) return null;
-
-  return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-sm"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="mx-auto mt-24 w-full max-w-3xl rounded-3xl bg-white p-8 shadow-2xl"
-      >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-3xl font-light">Search Products</h2>
-
-          <button onClick={onClose}>
-            <X size={22} />
-          </button>
-        </div>
-
-        <div className="flex items-center gap-3 rounded-xl border px-4 py-3">
-          <Search size={18} />
-
-          <input
-            autoFocus
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products..."
-            className="w-full outline-none"
-          />
-        </div>
-
-        <div className="mt-6 space-y-2">
-          {results.map((product) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.id}`}
-              onClick={onClose}
-              className="block rounded-xl p-4 transition hover:bg-neutral-100"
-            >
-              <div className="font-medium">{product.name}</div>
-
-              <div className="text-sm text-neutral-500">
-                ₹{product.price.toLocaleString("en-IN")}
-              </div>
-            </Link>
-          ))}
-
-          {query && results.length === 0 && (
-            <p className="text-neutral-500">
-              No products found.
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const dialogId = useId(); const dialogRef = useRef<HTMLDivElement>(null); const inputRef = useRef<HTMLInputElement>(null); const previousFocus = useRef<HTMLElement | null>(null);
+  const [query, setQuery] = useState(""); const [debouncedQuery, setDebouncedQuery] = useState(""); const [recents, setRecents] = useState<string[]>([]); const [activeIndex, setActiveIndex] = useState(-1);
+  const results = useMemo(() => searchProducts(debouncedQuery), [debouncedQuery]); const searching = Boolean(query.trim()); const loading = searching && normalize(query) !== normalize(debouncedQuery);
+  const close = useCallback(() => onClose(), [onClose]);
+  const remember = useCallback((value: string) => { const clean = value.trim(); if (!clean) return; setRecents((current) => { const next = [clean, ...current.filter((item) => item.toLowerCase() !== clean.toLowerCase())].slice(0, MAX_RECENT_SEARCHES); localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next)); return next; }); }, []);
+  useEffect(() => { const timer = window.setTimeout(() => setDebouncedQuery(query), 170); return () => window.clearTimeout(timer); }, [query]);
+  useEffect(() => { setActiveIndex(-1); }, [debouncedQuery]);
+  useEffect(() => { if (!open) return; previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setQuery(""); setDebouncedQuery(""); try { const saved: unknown = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) ?? "[]"); setRecents(Array.isArray(saved) ? saved.filter((item): item is string => typeof item === "string").slice(0, MAX_RECENT_SEARCHES) : []); } catch { setRecents([]); } const overflow = document.body.style.overflow; document.body.style.overflow = "hidden"; const frame = requestAnimationFrame(() => inputRef.current?.focus()); return () => { cancelAnimationFrame(frame); document.body.style.overflow = overflow; previousFocus.current?.focus(); }; }, [open]);
+  useEffect(() => { const shortcut = (event: KeyboardEvent) => { if (event.key !== "/" || (event.target as HTMLElement)?.matches("input, textarea, select, [contenteditable='true']")) return; event.preventDefault(); if (!open) document.querySelector<HTMLElement>("button[aria-label='Open search']")?.click(); }; addEventListener("keydown", shortcut); return () => removeEventListener("keydown", shortcut); }, [open]);
+  const onKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => { if (event.key === "Escape") return close(); const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input:not([disabled])') ?? []); if (event.key === "Tab") { event.preventDefault(); const current = focusable.indexOf(document.activeElement as HTMLElement); focusable[event.shiftKey ? (current <= 0 ? focusable.length - 1 : current - 1) : (current === focusable.length - 1 ? 0 : current + 1)]?.focus(); } if (searching && results.length) { if (event.key === "ArrowDown") { event.preventDefault(); setActiveIndex((index) => (index + 1) % results.length); } if (event.key === "ArrowUp") { event.preventDefault(); setActiveIndex((index) => (index <= 0 ? results.length - 1 : index - 1)); } if (event.key === "Enter" && activeIndex >= 0) { remember(query); window.location.assign(`/product/${results[activeIndex].id}`); } } };
+  return <AnimatePresence>{open && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .28 }} onMouseDown={(event) => event.target === event.currentTarget && close()} className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[#020817]/72 px-3 pt-[88px] pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:px-6 sm:pt-28"><motion.div ref={dialogRef} id={dialogId} role="dialog" aria-modal="true" aria-labelledby={`${dialogId}-title`} aria-describedby={`${dialogId}-description`} onKeyDown={onKeyDown} initial={{ opacity: 0, y: -24, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -12, scale: .985 }} transition={{ type: "spring", stiffness: 300, damping: 28 }} className="relative mb-3 w-full max-w-[900px] overflow-hidden rounded-[2rem] border border-[#D8B56A]/35 bg-[linear-gradient(135deg,rgba(8,26,53,.98),rgba(7,18,37,.96))] text-white shadow-[0_30px_100px_rgba(0,0,0,.55),0_0_60px_rgba(216,181,106,.13)]"><div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-2/3 -translate-x-1/2 rounded-full bg-[#D8B56A]/15 blur-[90px]" /><div className="relative p-4 sm:p-7"><div className="mb-5 flex items-start justify-between gap-4 sm:mb-7"><div><p className="mb-1 text-[10px] font-semibold tracking-[.24em] text-[#D8B56A] uppercase">TIZA private search</p><h2 id={`${dialogId}-title`} className="font-serif text-2xl font-light tracking-wide sm:text-3xl">Find your next signature piece</h2><p id={`${dialogId}-description`} className="sr-only">Search the TIZA catalogue by product, collection, category, or description.</p></div><motion.button type="button" onClick={close} whileHover={{ rotate: 90, scale: 1.04 }} whileTap={{ scale: .96 }} className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D8B56A]/35 bg-white/5 text-[#E6C57A] transition hover:bg-[#D8B56A]/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E6C57A]" aria-label="Close search"><X size={19} /></motion.button></div><SearchInput inputRef={inputRef} query={query} onChange={setQuery} /><div className="mt-5 min-h-[280px] sm:mt-7">{searching ? loading ? <SearchSkeleton /> : <SearchResults results={results} query={debouncedQuery} activeIndex={activeIndex} onHover={setActiveIndex} onSelect={() => { remember(query); close(); }} /> : <Discovery recents={recents} onQuery={setQuery} onClear={() => { localStorage.removeItem(RECENT_SEARCHES_KEY); setRecents([]); }} onClose={close} />}</div><div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-[11px] tracking-wide text-white/40"><span className="inline-flex items-center gap-1.5"><TrendingUp size={13} className="text-[#D8B56A]" /> Curated for the modern wardrobe</span><span className="hidden sm:block">Press <kbd className="rounded border border-white/15 px-1">/</kbd> to search anytime</span></div></div></motion.div></motion.div>}</AnimatePresence>;
 }

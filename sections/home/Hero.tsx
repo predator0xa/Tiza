@@ -1,76 +1,23 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white pt-24 sm:pt-28 md:pt-40">
-      {/* Background decoration */}
-      <div className="absolute inset-0">
-        <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-100 blur-3xl sm:h-[550px] sm:w-[550px] md:h-[700px] md:w-[700px]" />
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 70 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 1.2,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className="relative z-10 px-6 text-center"
-      >
-        <p className="whitespace-nowrap text-[11px] tracking-[0.18em] uppercase text-neutral-500">
-          Luxury · Modern · Minimal
-        </p>
-
-        <h1
-          className="text-7xl font-light leading-none tracking-[8px] text-black sm:text-8xl sm:tracking-[12px] md:text-[120px] md:tracking-[20px]"
-          style={{
-            fontFamily: "Cormorant Garamond",
-          }}
-        >
-          TIZA
-        </h1>
-
-        <h2 className="mt-6 text-2xl font-light sm:text-3xl md:text-4xl">
-          Don't just fit into the story.
-        </h2>
-
-        <div className="mt-4 flex flex-col items-center">
-          <h3 className="mt-6 text-2xl font-light sm:text-3xl md:text-4xl">
-            Write your own.
-          </h3>
-
-          <div className="mt-8 h-px w-20 bg-neutral-300 md:w-28" />
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.98 }}
-          className="mt-14 rounded-full bg-black px-10 py-3 text-sm text-white transition-colors duration-300 hover:bg-neutral-800 md:px-12 md:py-4 md:text-base"
-        >
-          Discover Collection
-        </motion.button>
+    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#081A35] px-5 pt-24 pb-16 text-white sm:pt-28 md:pt-36">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(216,181,106,.2),transparent_28%),linear-gradient(135deg,#081A35_0%,#06142b_52%,#0c254b_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(transparent,rgba(0,0,0,.2))]" />
+      <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 max-w-4xl text-center">
+        <p className="text-[10px] font-semibold tracking-[0.28em] text-[#E6C57A] uppercase sm:text-[11px]">TIZA / Spring Summer 2026</p>
+        <h1 className="mt-5 font-serif text-7xl font-light leading-none tracking-[.2em] text-white sm:text-8xl md:text-[120px]">TIZA</h1>
+        <h2 className="mx-auto mt-8 max-w-xl font-serif text-3xl font-light leading-tight text-white/95 sm:text-4xl md:text-5xl">Don't just fit into the story.<span className="mt-2 block text-[#E6C57A]">Write your own.</span></h2>
+        <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-white/60">Essential silhouettes, considered materials, and a modern point of view.</p>
+        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }} className="mt-10 inline-block">
+          <Link href="/collections" className="inline-flex min-h-12 items-center rounded-full bg-[#E6C57A] px-7 text-xs font-semibold tracking-[.16em] text-[#081A35] uppercase shadow-[0_12px_35px_rgba(0,0,0,.2)] transition hover:bg-white">Discover the collection</Link>
+        </motion.div>
       </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: [0.4, 1, 0.4],
-          y: [0, 8, 0],
-        }}
-        transition={{
-          duration: 2.8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-neutral-400"
-      >
-        <div className="flex flex-col items-center">
-          <div className="mb-3 h-10 w-px bg-neutral-300" />
-          <span className="text-lg">↓</span>
-        </div>
-      </motion.div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0.45, 1, 0.45], y: [0, 7, 0] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[#E6C57A]/70"><div className="flex flex-col items-center"><div className="mb-3 h-10 w-px bg-[#D8B56A]/50" /><span className="text-[10px] tracking-[.2em] uppercase">Scroll</span></div></motion.div>
     </section>
   );
 }
