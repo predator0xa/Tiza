@@ -7,7 +7,7 @@ import FeaturedProducts from "@/sections/home/FeaturedProducts";
 import EditorialJournal from "@/sections/home/EditorialJournal";
 import FeaturedOutfits from "@/sections/home/FeaturedOutfits";
 
-const LAUNCH = true;
+const LAUNCH = false;
 
 export default function Home() {
   if (!LAUNCH) {
